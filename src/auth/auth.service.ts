@@ -70,6 +70,10 @@ export class AuthService {
     }
   }
 
+  async getInfo(user: User): Promise<User> {
+    return await this.userModel.findOne({ _id: user._id }, "_id email login surname name imageUrl playlists");
+  }
+
   async logout(user: User) {
     return this.userModel.updateOne({ _id: user._id }, { refreshToken: null });
   }

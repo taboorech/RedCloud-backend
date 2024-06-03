@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Types } from 'mongoose';
 import { User } from './user.schema';
+import { AddSongDto } from 'src/playlist/dto/add-song.dto';
 
 export type PlaylistDocument = HydratedDocument<Playlist>;
 
@@ -14,11 +15,18 @@ export class Playlist {
   @Prop({ required: true, default: 0 })
   duration: number;
 
-  @Prop({ required: true, type: [{title: {type: String}, author: mongoose.Schema.Types.ObjectId, album: String, duration: Number }] })
+  @Prop({ required: true, default: true })
+  private: boolean;
+
+  @Prop({ required: true, default: "playlist.jpg" })
+  imageUrl: string;
+
+  @Prop({ required: true, type: [{title: {type: String}, author: {type: mongoose.Schema.Types.ObjectId}, album: {type: String}, imageName: {type: String, default: "song.jpg"}, duration: {type: Number} }] })
   songs: {
     title: string;
     author: User;
     album: string;
+    imageUrl: string;
     duration: number;
   }[];
 
@@ -26,6 +34,8 @@ export class Playlist {
   owners: User[];
 
   addOwner: Function;
+
+  addSong: Function;
 }
 
 export const PlaylistSchema = SchemaFactory.createForClass(Playlist);
@@ -36,4 +46,12 @@ PlaylistSchema.methods.addOwner = async function (owner: User): Promise<User[]> 
   this.owners = owners;
   await this.save();
   return this.owners;
+}
+
+PlaylistSchema.methods.addSong = async function (addSongDto: AddSongDto): Promise<{ title: string; author: User; album: string; duration: number }[]> {
+  const songs = [...this.songs];
+  songs.push(addSongDto);
+  this.songs = songs;
+  await this.save();
+  return this.songs;
 }

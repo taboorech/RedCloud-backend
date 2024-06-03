@@ -35,6 +35,12 @@ export class AuthController {
     return this.authService.logout(req.user);
   }
 
+  @Get('/info')
+  @UseGuards(AuthGuard('jwt'))
+  getInfo(@Req() req: any): Promise<User> {
+    return this.authService.getInfo(req.user);
+  }
+
   @UseGuards(AuthGuard('jwt-refresh'))
   @Get('/refresh')
   refreshTokens(@Req() req) {
