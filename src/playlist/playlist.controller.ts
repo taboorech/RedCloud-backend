@@ -20,7 +20,7 @@ export class PlaylistController {
 
   @Get("/:id")
   @UseGuards(AuthGuard("jwt"))
-  getPlaylist(@Req() req: any, @Param("id") playlistId: string): Promise<Playlist | NotAcceptableException>  {
+  getPlaylist(@Req() req: any, @Param("id") playlistId: string): Promise<{playlist: Playlist, isOwner: boolean} | NotAcceptableException>  {
     return this.playlistService.getPlaylist(req.user, playlistId);
   }
 

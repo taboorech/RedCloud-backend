@@ -18,13 +18,21 @@ export class PlaylistService {
     return playlists;
   }
 
-  async getPlaylist(user: User, playlistId: string): Promise<Playlist | NotAcceptableException> {
+  async getPlaylist(user: User, playlistId: string): Promise<{playlist: Playlist, isOwner: boolean} | NotAcceptableException> {
     const playlist = await this.playlistModel.findOne({ _id: playlistId});
-    if(!playlist.owners.find((owner => owner.toString() === user._id.toString())) || playlist.private) {
+    // if(!playlist.owners.find((owner => owner.toString() === user._id.toString())) || playlist.private) {
+    // if(!playlist.owners.find((owner => owner.toString() === user._id.toString()))) {
+    //   return new NotAcceptableException();
+    // }
+
+    let isOwner = false;
+    if(playlist.owners.find((owner => owner.toString() === user._id.toString()))) {
+      isOwner = true;
+    } else if(playlist.private) {
       return new NotAcceptableException();
     }
 
-    return playlist;
+    return { playlist, isOwner };
   }
 
   async addSong(user: User, playlistId: string, addSongDto: AddSongDto): Promise<Playlist | NotAcceptableException> {

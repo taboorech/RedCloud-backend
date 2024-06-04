@@ -18,10 +18,10 @@ export class Playlist {
   @Prop({ required: true, default: true })
   private: boolean;
 
-  @Prop({ required: true, default: "playlist.jpg" })
+  @Prop({ required: true, default: "/images/playlist.jpg" })
   imageUrl: string;
 
-  @Prop({ required: true, type: [{title: {type: String}, author: {type: mongoose.Schema.Types.ObjectId}, album: {type: String}, imageName: {type: String, default: "song.jpg"}, duration: {type: Number} }] })
+  @Prop({ required: true, type: [{title: {type: String}, author: {type: mongoose.Schema.Types.ObjectId}, album: {type: String}, imageName: {type: String, default: "/images/song.jpg"}, duration: {type: Number} }] })
   songs: {
     title: string;
     author: User;
@@ -34,7 +34,7 @@ export class Playlist {
   owners: User[];
 
   addOwner: Function;
-
+  
   addSong: Function;
 }
 
