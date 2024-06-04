@@ -14,7 +14,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     ConfigModule.forRoot(),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', "public"),
-      renderPath: '/images',
+      renderPath: '/images' || "/songs",
     }),
   ],
 })

@@ -5,6 +5,9 @@ export class AddSongDto {
   title: string;
 
   @IsString()
+  songUrl: string;
+
+  @IsString()
   author: string;
 
   @IsString()

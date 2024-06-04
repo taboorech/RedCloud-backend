@@ -21,9 +21,10 @@ export class Playlist {
   @Prop({ required: true, default: "/images/playlist.jpg" })
   imageUrl: string;
 
-  @Prop({ required: true, type: [{title: {type: String}, author: {type: mongoose.Schema.Types.ObjectId}, album: {type: String}, imageName: {type: String, default: "/images/song.jpg"}, duration: {type: Number} }] })
+  @Prop({ required: true, type: [{title: {type: String}, songUrl: { type: String }, author: {type: mongoose.Schema.Types.ObjectId}, album: {type: String}, imageUrl: {type: String, default: "/images/song.jpg"}, duration: {type: Number} }] })
   songs: {
     title: string;
+    songUrl: string;
     author: User;
     album: string;
     imageUrl: string;
@@ -51,6 +52,7 @@ PlaylistSchema.methods.addOwner = async function (owner: User): Promise<User[]> 
 PlaylistSchema.methods.addSong = async function (addSongDto: AddSongDto): Promise<{ title: string; author: User; album: string; duration: number }[]> {
   const songs = [...this.songs];
   songs.push(addSongDto);
+  this.duration += addSongDto.duration;
   this.songs = songs;
   await this.save();
   return this.songs;
