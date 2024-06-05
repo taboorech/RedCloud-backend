@@ -6,10 +6,12 @@ import { Playlist, PlaylistDocument } from 'src/schemas/playlist.schema';
 import { PlaylistCreateDto } from './dto/playlist-create.dto';
 import { User } from 'src/schemas/user.schema';
 import { AddSongDto } from './dto/add-song.dto';
+import { Song, SongDocument } from 'src/schemas/song.schema';
 
 @Injectable()
 export class PlaylistService {
   constructor(
+    @InjectModel(Song.name) private songModel: Model<SongDocument>,
     @InjectModel(Playlist.name) private playlistModel: Model<PlaylistDocument>
   ) {}
 
@@ -19,7 +21,7 @@ export class PlaylistService {
   }
 
   async getPlaylist(user: User, playlistId: string): Promise<{playlist: Playlist, isOwner: boolean} | NotAcceptableException> {
-    const playlist = await this.playlistModel.findOne({ _id: playlistId});
+    const playlist = await this.playlistModel.findOne({ _id: playlistId}).populate("songs");
     // if(!playlist.owners.find((owner => owner.toString() === user._id.toString())) || playlist.private) {
     // if(!playlist.owners.find((owner => owner.toString() === user._id.toString()))) {
     //   return new NotAcceptableException();
@@ -41,7 +43,9 @@ export class PlaylistService {
       return new NotAcceptableException();
     }
 
-    playlist.addSong(addSongDto);
+    const { songId } = addSongDto;
+    const song = await this.songModel.findOne({ _id: songId });
+    playlist.addSong(song);
     return playlist;
   }
 

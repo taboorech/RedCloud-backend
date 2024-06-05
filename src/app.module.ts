@@ -5,6 +5,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PlaylistModule } from './playlist/playlist.module';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { SongController } from './song/song.controller';
+import { SongService } from './song/song.service';
+import { SongModule } from './song/song.module';
 
 @Module({
   imports: [
@@ -16,6 +19,9 @@ import { ServeStaticModule } from '@nestjs/serve-static';
       rootPath: join(__dirname, '..', "public"),
       renderPath: '/images' || "/songs",
     }),
+    SongModule,
   ],
+  // controllers: [SongController],
+  // providers: [SongService],
 })
 export class AppModule {}
