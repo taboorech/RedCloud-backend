@@ -11,6 +11,10 @@ export class SongService {
     @InjectModel(Song.name) private songModel: Model<SongDocument>
   ) {}
 
+  async getSong(songId: string) {
+    return await this.songModel.findOne({ _id: songId }).populate("authors", "_id login surname name imageUrl description");
+  }
+
   async createSong(user: User, createSongDto: CreateSongDto): Promise<Song> {
     const { title, songUrl, album, duration } = createSongDto;
     const song = new this.songModel({title, songUrl, album, duration, authors: [user._id]});

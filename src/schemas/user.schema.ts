@@ -27,6 +27,9 @@ export class User {
   password: string;
 
   @Prop()
+  description: string;
+
+  @Prop()
   refreshToken: string;
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Playlist' }] })

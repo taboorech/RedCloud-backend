@@ -21,7 +21,12 @@ export class PlaylistService {
   }
 
   async getPlaylist(user: User, playlistId: string): Promise<{playlist: Playlist, isOwner: boolean} | NotAcceptableException> {
-    const playlist = await this.playlistModel.findOne({ _id: playlistId}).populate("songs");
+    const playlist = await this.playlistModel.findOne({ _id: playlistId}).populate({
+      path : 'songs',
+      populate : {
+        path : 'authors'
+      }
+    });;
     // if(!playlist.owners.find((owner => owner.toString() === user._id.toString())) || playlist.private) {
     // if(!playlist.owners.find((owner => owner.toString() === user._id.toString()))) {
     //   return new NotAcceptableException();
