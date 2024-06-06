@@ -19,6 +19,7 @@ export class SongService {
     const { title, songUrl, album, duration } = createSongDto;
     const song = new this.songModel({title, songUrl, album, duration, authors: [user._id]});
     song.save();
+    user.addSong(song);
     return song;
   }
 }

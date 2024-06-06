@@ -8,20 +8,22 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { SongController } from './song/song.controller';
 import { SongService } from './song/song.service';
 import { SongModule } from './song/song.module';
+import { UserController } from './user/user.controller';
+import { UserService } from './user/user.service';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
     AuthModule,
     PlaylistModule,
+    SongModule,
+    UserModule,
     MongooseModule.forRoot('mongodb://localhost:27017/RedCloud'),
     ConfigModule.forRoot(),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', "public"),
       renderPath: '/images' || "/songs",
     }),
-    SongModule,
   ],
-  // controllers: [SongController],
-  // providers: [SongService],
 })
 export class AppModule {}
