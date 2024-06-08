@@ -1,3 +1,4 @@
+import { UpdateUserInfoDto } from './dto/update-user-info.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -15,5 +16,9 @@ export class UserService {
 
   async getProfileInfo(user: User): Promise<User> {
     return await this.userModel.findOne({ _id: user._id }, "-password").populate("playlists songs");
+  }
+
+  async updateUserInfo(user: User, updateUserInfoDto: UpdateUserInfoDto): Promise<User> {
+    return await this.userModel.findOneAndUpdate({ _id: user._id }, updateUserInfoDto);
   }
 }

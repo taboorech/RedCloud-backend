@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Types } from 'mongoose';
 import { Playlist } from './playlist.schema';
 import { Song } from './song.schema';
+import { profile } from 'console';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -45,6 +46,60 @@ export class User {
     songsFound: Number,
     songsLiked: Number,
     playlistsCreated: Number
+  }
+
+  @Prop({ 
+    required: true,
+    default: {
+      profile: {},
+      recommends: {},
+      main: {},
+      privacy: {}
+    },
+    type: raw({
+      profile: raw({
+        showPlaylists: {type: Boolean, default: false},
+        showStats: {type: Boolean, default: false},
+        showFavoriteAuthors: {type: Boolean, default: false},
+        showFavoritePlaylists: {type: Boolean, default: false}
+      }),
+      recommends: {
+        showFriendsListenSongs: {type: Boolean, default: false},
+        showRecommendsSongsOnMainPage: {type: Boolean, default: false},
+        showRecommendsPlaylistsOnMainPage: {type: Boolean, default: false},
+        muchRecommendUserCountrySongs: {type: Boolean, default: false}
+      },
+      main: {
+        getNotifications: {type: Boolean, default: false}
+      },
+      privacy: {
+        privateProfile: {type: Boolean, default: false},
+        showUserListeningSongs: {type: Boolean, default: false},
+        twoStepVerification: {type: Boolean, default: false}
+      }
+    })
+  })
+  settings: {
+    profile: {
+      showPlaylists: boolean,
+      showStats: boolean,
+      showFavoriteAuthors: boolean,
+      showFavoritePlaylists: boolean
+    },
+    recommends: {
+      showFriendsListenSongs: boolean,
+      showRecommendsSongsOnMainPage: boolean,
+      showRecommendsPlaylistsOnMainPage: boolean,
+      muchRecommendUserCountrySongs: boolean
+    },
+    main: {
+      getNotifications: boolean
+    },
+    privacy: {
+      privateProfile: boolean,
+      showUserListeningSongs: boolean,
+      twoStepVerification: boolean
+    }
   }
 
   addPlaylist: Function;
