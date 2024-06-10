@@ -1,8 +1,9 @@
-import { Controller, Req, Get, UseGuards, Patch, Body } from '@nestjs/common';
+import { Controller, Req, Get, UseGuards, Patch, Body, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/schemas/user.schema';
 import { UpdateUserInfoDto } from './dto/update-user-info.dto';
+import { FileInterceptor } from '@nestjs/platform-express/multer';
 
 @Controller('user')
 export class UserController {
@@ -24,7 +25,8 @@ export class UserController {
 
   @Patch('/')
   @UseGuards(AuthGuard("jwt"))
-  updateUserInfo(@Req() req: any, @Body() updateUserInfoDto: UpdateUserInfoDto): Promise<User> {
-    return this.userService.updateUserInfo(req.user, updateUserInfoDto);
+  @UseInterceptors(FileInterceptor('backgroundImage'))
+  updateUserInfo(@Req() req: any, @Body() updateUserInfoDto: UpdateUserInfoDto, @UploadedFile() file: Express.Multer.File) { 
+    return this.userService.updateUserInfo(req.user, updateUserInfoDto, file);
   }
 }

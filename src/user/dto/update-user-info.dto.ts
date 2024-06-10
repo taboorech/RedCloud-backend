@@ -1,4 +1,5 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsJSON, IsOptional, IsString } from 'class-validator';
+import { UserCountry } from '../user-country.enum';
 
 export class UpdateUserInfoDto {
   @IsString()
@@ -14,5 +15,13 @@ export class UpdateUserInfoDto {
   name: string;
 
   @IsOptional()
-  settings: Object;
+  @IsEnum(UserCountry)
+  country: UserCountry;
+
+  @IsOptional()
+  backgroundImage: string;
+
+  @IsOptional()
+  @IsJSON()
+  settings: string;
 }

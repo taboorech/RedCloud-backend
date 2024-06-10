@@ -18,7 +18,10 @@ export class UserService {
     return await this.userModel.findOne({ _id: user._id }, "-password").populate("playlists songs");
   }
 
-  async updateUserInfo(user: User, updateUserInfoDto: UpdateUserInfoDto): Promise<User> {
-    return await this.userModel.findOneAndUpdate({ _id: user._id }, updateUserInfoDto);
+  async updateUserInfo(user: User, updateUserInfoDto: UpdateUserInfoDto, file: Express.Multer.File): Promise<User> { 
+    const { settings } = updateUserInfoDto;
+    const parseSettings = JSON.parse(settings);
+    const parseFilePath = `images/${file.filename}`;
+    return await this.userModel.findOneAndUpdate({ _id: user._id }, {...updateUserInfoDto, settings: parseSettings, backgroundImage: {path:  parseFilePath, originalname: file.originalname}}, { new: true });
   }
 }

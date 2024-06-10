@@ -3,6 +3,7 @@ import mongoose, { HydratedDocument, Types } from 'mongoose';
 import { Playlist } from './playlist.schema';
 import { Song } from './song.schema';
 import { profile } from 'console';
+import path from 'path';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -39,6 +40,15 @@ export class User {
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Playlist' }] })
   playlists: Playlist[];
+
+  @Prop()
+  country: string;
+
+  @Prop({ type: raw({ path: String, originalname: String }) })
+  backgroundImage: {
+    path: string;
+    originalname: string;
+  };
 
   @Prop({ required: true, type: raw({ songsListened: Number, songsFound: Number, songsLiked: Number, playlistsCreated: Number }), default: { songsListened: 0, songsFound: 0, songsLiked: 0, playlistsCreated: 0 }})
   stats: {
