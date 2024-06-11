@@ -1,6 +1,7 @@
 import { UpdateUserInfoDto } from './dto/update-user-info.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { unlink } from 'fs';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/schemas/user.schema';
 
@@ -18,10 +19,40 @@ export class UserService {
     return await this.userModel.findOne({ _id: user._id }, "-password").populate("playlists songs");
   }
 
+  async updateUserAvatar(user: User, file: Express.Multer.File): Promise<User> {
+    let parseFilePath = "";
+    if(file) {
+      unlink(`public/${user.imageUrl}`, err => {
+        err && console.log(err);
+      });
+      parseFilePath = `/images/${file.filename}`;
+    }
+
+    if(!parseFilePath) {
+      return;
+    }
+
+    return await this.userModel.findOneAndUpdate({ _id: user._id }, { imageUrl: parseFilePath }, { new: true });
+  }
+
   async updateUserInfo(user: User, updateUserInfoDto: UpdateUserInfoDto, file: Express.Multer.File): Promise<User> { 
     const { settings } = updateUserInfoDto;
-    const parseSettings = JSON.parse(settings);
-    const parseFilePath = `images/${file.filename}`;
-    return await this.userModel.findOneAndUpdate({ _id: user._id }, {...updateUserInfoDto, settings: parseSettings, backgroundImage: {path:  parseFilePath, originalname: file.originalname}}, { new: true });
+    const data = {...updateUserInfoDto, backgroundImage: user.backgroundImage};
+    if(settings) {
+      const parseSettings = JSON.parse(settings);
+      data.settings = parseSettings;
+    }    
+      
+    if(file) {
+      unlink(`public/${user.backgroundImage.path}`, err => {
+        err && console.log(err);
+      });
+      const parseFilePath = `/images/${file.filename}`;
+      data.backgroundImage = {
+        path:  parseFilePath,
+        originalname: file.originalname
+      }
+    }
+    return await this.userModel.findOneAndUpdate({ _id: user._id }, {...data}, { new: true });
   }
 }

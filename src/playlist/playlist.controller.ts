@@ -1,10 +1,12 @@
-import { Body, Controller, Get, NotAcceptableException, Param, Patch, Put, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, NotAcceptableException, Param, Patch, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { PlaylistCreateDto } from './dto/playlist-create.dto';
 import { PlaylistService } from './playlist.service';
 import { AddSongDto } from './dto/add-song.dto';
 import { Playlist } from 'src/schemas/playlist.schema';
 import { AddOwnerDto } from './dto/add-owner.dto';
+import { UpdatePlaylistDto } from './dto/update-playlist.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('playlist')
 export class PlaylistController {
@@ -40,5 +42,12 @@ export class PlaylistController {
   @UseGuards(AuthGuard("jwt"))
   addOwner(@Req() req: any, @Param("id") playlistId: string, @Body() addOwnerDto: AddOwnerDto): Promise<Playlist | NotAcceptableException> {
     return this.playlistService.addOwner(req.user, playlistId, addOwnerDto);
+  }
+
+  @Patch("/:id/update")
+  @UseGuards(AuthGuard("jwt"))
+  @UseInterceptors(FileInterceptor("playlistImage"))
+  updatePlaylist(@Req() req: any, @Param("id") playlistId: string, @Body() updatePlaylistDto: UpdatePlaylistDto, @UploadedFile() file: Express.Multer.File): Promise<Playlist> {
+    return this.playlistService.updatePlaylist(req.user, playlistId, updatePlaylistDto, file);
   }
 }

@@ -29,4 +29,11 @@ export class UserController {
   updateUserInfo(@Req() req: any, @Body() updateUserInfoDto: UpdateUserInfoDto, @UploadedFile() file: Express.Multer.File) { 
     return this.userService.updateUserInfo(req.user, updateUserInfoDto, file);
   }
+
+  @Patch('/avatar')
+  @UseGuards(AuthGuard("jwt"))
+  @UseInterceptors(FileInterceptor("avatarImage"))
+  updateUserAvatar(@Req() req: any, @UploadedFile() file: Express.Multer.File): Promise<User> {
+    return this.userService.updateUserAvatar(req.user, file);
+  }
 }
