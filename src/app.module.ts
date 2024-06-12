@@ -7,6 +7,7 @@ import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { SongModule } from './song/song.module';
 import { UserModule } from './user/user.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { UserModule } from './user/user.module';
     PlaylistModule,
     SongModule,
     UserModule,
+    SearchModule,
     MongooseModule.forRoot('mongodb://localhost:27017/RedCloud'),
     ConfigModule.forRoot(),
     ServeStaticModule.forRoot({
