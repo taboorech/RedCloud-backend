@@ -36,4 +36,16 @@ export class UserController {
   updateUserAvatar(@Req() req: any, @UploadedFile() file: Express.Multer.File): Promise<User> {
     return this.userService.updateUserAvatar(req.user, file);
   }
+
+  @Get('/friends')
+  @UseGuards(AuthGuard("jwt"))
+  getFriends(@Req() req: any) {
+    return this.userService.getFriends(req.user);
+  }
+
+  @Patch('/friend-add/:id')
+  @UseGuards(AuthGuard("jwt"))
+  addFriend(@Req() req: any, @Param("id") userId: string): Promise<User[]> {
+    return this.userService.addFriend(req.user, userId);
+  }
 }

@@ -58,7 +58,7 @@ export class User {
     playlistsCreated: Number
   }
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  @Prop({ type:[{type: mongoose.Schema.Types.ObjectId, ref: 'User'}] })
   friends: User[];
 
   @Prop({ 

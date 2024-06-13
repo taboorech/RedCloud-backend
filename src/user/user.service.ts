@@ -55,4 +55,14 @@ export class UserService {
     }
     return await this.userModel.findOneAndUpdate({ _id: user._id }, {...data}, { new: true });
   }
+
+  async getFriends(user: User): Promise<User> {
+    return await this.userModel.findOne({ _id: user._id }, "friends").populate("friends");
+  }
+
+  async addFriend(user: User, userId: string): Promise<User[]> {
+    const candidate = await this.userModel.findOne({ _id: userId });
+
+    return await user.addFriend(candidate);
+  }
 }
