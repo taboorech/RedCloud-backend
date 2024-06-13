@@ -58,6 +58,9 @@ export class User {
     playlistsCreated: Number
   }
 
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  friends: User[];
+
   @Prop({ 
     required: true,
     default: {
@@ -115,6 +118,8 @@ export class User {
   addPlaylist: Function;
 
   addSong: Function;
+
+  addFriend: Function;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
@@ -133,4 +138,12 @@ UserSchema.methods.addSong = async function (song: Song): Promise<Song[]> {
   this.songs = songs;
   await this.save();
   return this.songs;
+}
+
+UserSchema.methods.addFriend = async function (user: User): Promise<User[]> {
+  const friends = [...this.friends];
+  friends.push(user);
+  this.friends = friends;
+  await this.save();
+  return this.friends;
 }

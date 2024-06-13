@@ -15,8 +15,8 @@ export class UserService {
     return await this.userModel.findOne({ _id: user._id }, "_id login imageUrl");
   }
 
-  async getProfileInfo(user: User): Promise<User> {
-    return await this.userModel.findOne({ _id: user._id }, "-password").populate("playlists songs");
+  async getProfileInfo(user: User, userId: string): Promise<User> {
+    return await this.userModel.findOne({ _id: userId }, "-password").populate("playlists songs");
   }
 
   async updateUserAvatar(user: User, file: Express.Multer.File): Promise<User> {

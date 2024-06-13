@@ -4,7 +4,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from 'src/schemas/user.schema';
 import { UserCreateDto } from './dto/user-create.dto';
@@ -41,7 +41,7 @@ export class AuthService {
 
   async signIn(
     authCredentialsDto: AuthCredentialsDto,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  ): Promise<{ _id: Types.ObjectId; accessToken: string; refreshToken: string }> {
     const { email, password } = authCredentialsDto;
     const candidate = await this.userModel.findOne({ email });
     if (candidate && (await bcrypt.compare(password, candidate.password))) {
@@ -64,7 +64,7 @@ export class AuthService {
           refreshToken: hashRefreshToken,
         },
       );
-      return { accessToken, refreshToken };
+      return { _id: candidate._id, accessToken, refreshToken };
     } else {
       throw new UnauthorizedException(`Wrong email or password`);
     }

@@ -1,4 +1,4 @@
-import { Controller, Req, Get, UseGuards, Patch, Body, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Req, Get, UseGuards, Patch, Body, UseInterceptors, UploadedFile, Param } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/schemas/user.schema';
@@ -17,10 +17,10 @@ export class UserController {
     return this.userService.getInfo(req.user);
   }
 
-  @Get('/profile-info')
+  @Get('/profile-info/:id')
   @UseGuards(AuthGuard('jwt'))
-  getProfileInfo(@Req() req: any): Promise<User> {
-    return this.userService.getProfileInfo(req.user);
+  getProfileInfo(@Req() req: any, @Param("id") userId: string): Promise<User> {
+    return this.userService.getProfileInfo(req.user, userId);
   }
 
   @Patch('/')
