@@ -8,6 +8,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { SongModule } from './song/song.module';
 import { UserModule } from './user/user.module';
 import { SearchModule } from './search/search.module';
+import { RecommendationsModule } from './recommendations/recommendations.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { SearchModule } from './search/search.module';
       rootPath: join(__dirname, '..', "public"),
       renderPath: '/images' || "/songs",
     }),
-  ],
+    RecommendationsModule,
+  ]
 })
 export class AppModule {}

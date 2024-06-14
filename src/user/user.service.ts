@@ -1,5 +1,5 @@
 import { UpdateUserInfoDto } from './dto/update-user-info.dto';
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { unlink } from 'fs';
 import { Model } from 'mongoose';
@@ -60,8 +60,9 @@ export class UserService {
     return await this.userModel.findOne({ _id: user._id }, "friends").populate("friends");
   }
 
-  async addFriend(user: User, userId: string): Promise<User[]> {
+  async addFriend(user: User, userId: string): Promise<User[] | ConflictException> {
     const candidate = await this.userModel.findOne({ _id: userId });
+    await candidate.addFriend(user);
 
     return await user.addFriend(candidate);
   }

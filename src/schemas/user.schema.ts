@@ -4,6 +4,7 @@ import { Playlist } from './playlist.schema';
 import { Song } from './song.schema';
 import { profile } from 'console';
 import path from 'path';
+import { ConflictException } from '@nestjs/common';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -140,8 +141,12 @@ UserSchema.methods.addSong = async function (song: Song): Promise<Song[]> {
   return this.songs;
 }
 
-UserSchema.methods.addFriend = async function (user: User): Promise<User[]> {
+UserSchema.methods.addFriend = async function (user: User): Promise<User[] | ConflictException> {
   const friends = [...this.friends];
+  
+  if(friends.find(({_id}) => _id.toString() === user._id.toString())) {
+    return new ConflictException();
+  }
   friends.push(user);
   this.friends = friends;
   await this.save();

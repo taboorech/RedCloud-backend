@@ -1,4 +1,4 @@
-import { Controller, Req, Get, UseGuards, Patch, Body, UseInterceptors, UploadedFile, Param } from '@nestjs/common';
+import { Controller, Req, Get, UseGuards, Patch, Body, UseInterceptors, UploadedFile, Param, ConflictException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/schemas/user.schema';
@@ -45,7 +45,7 @@ export class UserController {
 
   @Patch('/friend-add/:id')
   @UseGuards(AuthGuard("jwt"))
-  addFriend(@Req() req: any, @Param("id") userId: string): Promise<User[]> {
+  addFriend(@Req() req: any, @Param("id") userId: string): Promise<User[] | ConflictException> {
     return this.userService.addFriend(req.user, userId);
   }
 }
