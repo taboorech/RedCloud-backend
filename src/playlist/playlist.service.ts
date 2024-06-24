@@ -90,4 +90,13 @@ export class PlaylistService {
 
     return playlist;
   }
+
+  async removePlaylist(user: User, playlistId: string) {
+    const playlist = await this.playlistModel.findOne({ _id: playlistId });
+    if(!playlist.owners.find(owner => owner.toString() === user._id.toString())) {
+      return;
+    }
+    await this.playlistModel.deleteOne({ _id: playlist.id});
+    return playlist;
+  }
 }

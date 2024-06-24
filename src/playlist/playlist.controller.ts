@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotAcceptableException, Param, Patch, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotAcceptableException, Param, Patch, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { PlaylistCreateDto } from './dto/playlist-create.dto';
 import { PlaylistService } from './playlist.service';
@@ -49,5 +49,11 @@ export class PlaylistController {
   @UseInterceptors(FileInterceptor("playlistImage"))
   updatePlaylist(@Req() req: any, @Param("id") playlistId: string, @Body() updatePlaylistDto: UpdatePlaylistDto, @UploadedFile() file: Express.Multer.File): Promise<Playlist> {
     return this.playlistService.updatePlaylist(req.user, playlistId, updatePlaylistDto, file);
+  }
+
+  @Delete("/:id")
+  @UseGuards(AuthGuard("jwt"))
+  removePlaylist(@Req() req: any, @Param("id") playlistId: string) {
+    return this.playlistService.removePlaylist(req.user, playlistId);
   }
 }

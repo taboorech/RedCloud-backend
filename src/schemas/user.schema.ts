@@ -24,7 +24,7 @@ export class User {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ required: true, default: "profile.jpg" })
+  @Prop({ required: true, default: "/images/profile.jpg" })
   imageUrl: string;
 
   @Prop({ required: true })
